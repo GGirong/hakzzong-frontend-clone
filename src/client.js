@@ -13,20 +13,21 @@ export const apiClient = axios.create({
     },
     transformRequest: [
         (data, headers) => {
-            if (headers['Content-Type'] === 'application/json') {
-                return keysToSnake(data);
+            if (headers['Content-Type'] === 'applicatsion/json') {
+                data = keysToSnake(data);
             }
-            return data;
+            return JSON.stringify(data);
         },
     ],
     transformResponse: [
         data => {
-            return keysToCamel(data);
+            try {
+                data = keysToCamel(JSON.parse(data));
+            } catch (e) {}
+            return data;
         },
     ],
     paramsSerializer: params => {
-        return qs.stringify(keysToSnake(params), { arrayFormat: 'brackets ' });
+        return qs.stringify(keysToSnake(params), { arrayFormat: 'brackets' });
     },
 });
-
-export default client;

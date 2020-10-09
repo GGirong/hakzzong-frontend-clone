@@ -6,9 +6,10 @@
             "Components/*": ["./src/components/*"],
             "Constants/*": ["./src/constants/*"],
             "Contexts/*": ["./src/contexts/*"],
-            "Widgets/*": ["./src/widgets/*"],
+            "Layouts/*": ["./src/layouts/*"],
             "Views/*": ["./src/views/*"],
-            "Public/*": ["./public/*"]
+            "Public/*": ["./public/*"],
+            "Utils": ["./src/utils.js"]
         }
     }
 }

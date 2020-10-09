@@ -1,0 +1,295 @@
+/* css reset */
+
+html,
+body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+/* HTML5 display-role reset for older browsers */
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+    display: block;
+}
+
+body {
+    line-height: 1;
+}
+
+ol,
+ul {
+    list-style: none;
+}
+
+blockquote,
+q {
+    quotes: none;
+}
+
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+    content: '';
+    content: none;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+.row {
+    margin: 0;
+    padding: 0;
+}
+
+/* utilities */
+
+.w-10 {
+    width: 10%;
+}
+
+.w-19 {
+    width: 19%;
+}
+
+.w-20 {
+    width: 20%;
+}
+
+.w-30 {
+    width: 30%;
+}
+
+.w-60 {
+    width: 60%;
+}
+
+.w-80 {
+    width: 80%;
+}
+
+.w-90 {
+    width: 90%;
+}
+
+.w-95 {
+    width: 95%;
+}
+
+.h-10 {
+    height: 10%;
+}
+
+.h-20 {
+    height: 20%;
+}
+
+.h-30 {
+    height: 30%;
+}
+
+.h-40 {
+    height: 40%;
+}
+
+.h-50 {
+    height: 50%;
+}
+
+.h-60 {
+    height: 60%;
+}
+
+.h-70 {
+    height: 70%;
+}
+
+.h-80 {
+    height: 80%;
+}
+
+.h-90 {
+    height: 90%;
+}
+
+.h-100 {
+    height: 100%;
+}
+
+hr.thick {
+    border-top: 3px solid;
+}
+
+.scroll {
+    overflow: auto;
+}
+
+/* modals */
+
+.modal.modal-narrow .modal-dialog {
+    max-width: 400px;
+}
+
+.modal.modal-select-relatives table th,
+.modal.modal-select-relatives table td {
+    text-align: center;
+    border: none;
+}
+
+.modal.modal-select-relatives .modal-header {
+    border-bottom: none;
+}
+
+.modal.modal-select-relatives .close {
+    font-size: 1.5rem;
+}
+
+.card.rewards-box {
+    width: 50%;
+    border: 1px solid #333;
+    border-radius: 0;
+}
+
+.card.rewards-box.rewards-box-1 {
+    border-right: 0;
+}
+
+.card.rewards-box .card-title {
+    border-bottom: 1px solid #333;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.5rem;
+}
+
+.card.rewards-box .card-body select {
+    font-size: 0.75rem;
+}
+
+.card.rewards-box .card-body .item-list {
+    padding-left: 10px;
+    width: 100%;
+    height: 300px;
+    overflow-y: auto;
+}
+
+.card.rewards-box .card-body .item {
+    width: 100%;
+    font-size: 0.9rem;
+    line-height: 1.3rem;
+    margin: 10px 0;
+}
+
+svg.right {
+    position: absolute;
+    right: 0;
+}
+svg.user-profile {
+    font-size: 2em;
+}
+
+.feedback-box {
+    height: 400px;
+}
+
+.tutorial-box {
+    height: 400px;
+}
+
+#register-modal .modal-dialog {
+    max-width: 700px;
+}
+
+.checkbox-lg {
+    width: 30px;
+    height: 30px;
+}
+
+.form-check-inline {
+    margin-right: 40px;
+}
+
+.search-result-box {
+    width: 100%;
+    height: 300px;
+    border: 1px solid #333;
+    overflow-y: auto;
+    margin-bottom: 20px;
+}
+
+.search-result-box .item {
+    width: 100%;
+    height: 2.4rem;
+    font-size: 1.2rem;
+    border-bottom: 1px solid #333;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.concept-description {
+    height: 350px;
+}
+
+.mission-type {
+    margin: 15px 0;
+}
+
+.mission {
+    width: 300px;
+    height: 300px;
+}
+
+.mission .row {
+    margin-bottom: 20px;
+}
+
+.card.mission .row .progress {
+    width: 100%;
+    height: 15px;
+}
+
+.mission-description-box {
+    width: 700px;
+    height: 300px;
+    border: 1px solid #333;
+}
+
+.mission-participate {
+    height: 50px;
+    font-size: 1.8rem;
+}
+
+.btn-go-back {
+    position: relative;
+    top: 50px;
+}
+
+.profile-container {
+    background: #eee;
+    left: -80px;
+    top: 40px;
+    width: 300px;
+    height: 250px;
+    padding: 20px 40px 20px 0;
+    z-index: 2;
+    display: none;
+}

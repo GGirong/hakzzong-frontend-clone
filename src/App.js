@@ -1,12 +1,12 @@
 import React from 'react';
 
 import { MainRoutes } from 'Router';
-import { AppContextProvider } from './AppContext';
+import { AppContextProvider } from 'Contexts/AppContext';
 
-export const App = props => {
+export const App = () => {
     return (
         <AppContextProvider>
-            <MainRoutes {...props} />
+            <MainRoutes />
         </AppContextProvider>
     );
 };

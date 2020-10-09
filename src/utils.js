@@ -1,17 +1,20 @@
 import _ from 'lodash';
+import uuid from 'uuid';
 
-export function formatMoney(v) {
+export const generateUuid = uuid.v4;
+
+export const formatMoney = v => {
     v = new Intl.NumberFormat('ko-KR', {
         style: 'currency',
         currency: 'WON',
     }).format(v);
     return v.replace(/WON\s/, '').replace(/\..*/, '');
-}
+};
 
-export function stripMoney(v) {
+export const stripMoney = v => {
     v = parseInt(v.split(',').join(''));
     return isNaN(v) ? 0 : v;
-}
+};
 
 const convertKeys = (fn, o) => {
     if (_.isArray(o)) {
@@ -24,9 +27,9 @@ const convertKeys = (fn, o) => {
     return o;
 };
 
-export const keysToCamel = o => convertKeys(_.camelCase);
+export const keysToCamel = o => convertKeys(_.camelCase, o);
 
-export const keysToSnake = o => convertKeys(_.snakeCase);
+export const keysToSnake = o => convertKeys(_.snakeCase, o);
 
 export const removeStorage = key => {
     try {
@@ -47,7 +50,7 @@ export const removeStorage = key => {
 export const getStorage = key => {
     const now = Date.now();
     let expiresIn = localStorage.getItem(key + '_expiresIn');
-    if (expiresIn === undefined || expiresIn === null) {
+    if (!expiresIn) {
         expiresIn = 0;
     }
 
