@@ -1,20 +1,70 @@
-import React, { useEffect, useContext } from 'react';
-import { AppContext } from 'Contexts/';
+import React, { useEffect, useState } from 'react';
 
-export const MissionListView = props => {
-    const {
-        state: { missions, missionReports },
-        dispatchers: { setMissions, setMissionReports },
-        apiCallers: { getMissions, getMissionReports },
-    } = useContext(AppContext);
+import { useHistory } from 'react-router-dom';
+import { Pen } from 'react-bootstrap-icons';
+
+import { useAPI, APIRoute } from 'Client';
+
+const mapMissionType = type => {
+    switch (type) {
+        case 'CONCEPT':
+            return '탐구이론';
+        case 'CONCEPT_RFP':
+            return '탐구이론 RFP';
+        case 'STUDY_SUBJECT':
+            return '탐구문제';
+        case 'STUDY_SUBJECT_RFP':
+            return '탐구문제 RFP';
+        default:
+            return type;
+    }
+};
+
+export const MissionListView = () => {
+    const [missions, setMissions] = useState([]);
+    const [missionReports, setMissionReports] = useState([]);
+    const history = useHistory();
+
+    const missionListAPI = useAPI(APIRoute.ResearchAssistant.Mission.List, {
+        callbacks: { onSuccess: setMissions },
+    });
+
+    const missionReportListAPI = useAPI(
+        APIRoute.ResearchAssistant.MissionReport.List,
+        {
+            callbacks: {
+                onSuccess: setMissionReports,
+            },
+        },
+    );
+
+    const gotoMissionDetail = mission =>
+        history.push({
+            pathname: `/missions/${mission.id}/`,
+            state: { entity: mission },
+        });
+
+    const gotoMissionReportDetail = missionReport => {
+        const {
+            mission: { type: missionType },
+        } = missionReport;
+
+        if (missionType === 'STUDY_SUBJECT') {
+            history.push({
+                pathname: `/study-subjects/${missionReport.id}/patch/`,
+                state: { entity: missionReport },
+            });
+        } else if (missionType === 'CONCEPT') {
+            history.push({
+                pathname: '/concepts/create/',
+                state: { entity: missionReport },
+            });
+        }
+    };
 
     useEffect(() => {
-        const init = async () => {
-            await getMissions();
-            await getMissionReports();
-        };
-
-        init();
+        missionListAPI.send();
+        missionReportListAPI.send({ isSubmitted: false });
     }, []);
 
     return (
@@ -30,46 +80,48 @@ export const MissionListView = props => {
                         <span>진행중인 미션이 없습니다.</span>
                     </div>
                 ) : (
-                    <></>
-                )}
-                {missionReports.map(missionReport => (
-                    <div className="card mission p-2 m-2 rounded-0">
-                        <div className="card-body">
-                            <div className="row h-10">
-                                <svg
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 16 16"
-                                    className="bi bi-pen"
-                                    fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+                    missionReports.map(missionReport => (
+                        <div
+                            className="card mission p-2 m-2 rounded-0"
+                            key={missionReport.id}
+                        >
+                            <div className="card-body">
+                                <div className="row h-10">
+                                    <Pen
+                                        onClick={() =>
+                                            gotoMissionReportDetail(
+                                                missionReport,
+                                            )
+                                        }
                                     />
-                                </svg>
-                            </div>
-                            <div className="row align-items-center justify-content-center h-70">
-                                <h4 className="text-center">탐구 문제 작성</h4>
-                                <h6 className="text-center">
-                                    진행 가능한 미션1
-                                </h6>
-                            </div>
-                            <div className="row h-20">
-                                <div className="progress">
-                                    <div
-                                        className="progress-bar w-25"
-                                        role="progressbar"
-                                        aria-valuenow="25"
-                                        aria-valuemin="0"
-                                        aria-valuemax="100"
-                                    ></div>
+                                </div>
+                                <div className="row align-items-center justify-content-center h-70">
+                                    <h4 className="text-center">
+                                        {`${mapMissionType(
+                                            missionReport.mission.type,
+                                        )} ${missionReport.id} ${
+                                            missionReport.submitted
+                                                ? '작성중'
+                                                : ''
+                                        }`}
+                                        작성
+                                    </h4>
+                                </div>
+                                <div className="row h-20">
+                                    <div className="progress">
+                                        <div
+                                            className="progress-bar w-25"
+                                            role="progressbar"
+                                            aria-valuenow="25"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                        ></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
             <div className="row mr-0 ml-0 mission-type w-100">
                 <div className="col-4 border-bottom border-dark p-0">
@@ -82,46 +134,39 @@ export const MissionListView = props => {
                         <span>진행 가능한 미션이 없습니다.</span>
                     </div>
                 ) : (
-                    <></>
-                )}
-                {missions.map(missionReport => (
-                    <div className="card mission p-2 m-2 rounded-0">
-                        <div className="card-body">
-                            <div className="row h-10">
-                                <svg
-                                    width="1em"
-                                    height="1em"
-                                    viewBox="0 0 16 16"
-                                    className="bi bi-pen"
-                                    fill="currentColor"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                >
-                                    <path
-                                        fillRule="evenodd"
-                                        d="M13.498.795l.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001zm-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708l-1.585-1.585z"
+                    missions.map(mission => (
+                        <div
+                            className="card mission p-2 m-2 rounded-0"
+                            key={mission.id}
+                        >
+                            <div className="card-body">
+                                <div className="row h-10">
+                                    <Pen
+                                        onClick={() =>
+                                            gotoMissionDetail(mission)
+                                        }
                                     />
-                                </svg>
-                            </div>
-                            <div className="row align-items-center justify-content-center h-70">
-                                <h4 className="text-center">탐구 문제 작성</h4>
-                                <h6 className="text-center">
-                                    진행 가능한 미션1
-                                </h6>
-                            </div>
-                            <div className="row h-20">
-                                <div className="progress">
-                                    <div
-                                        className="progress-bar w-25"
-                                        role="progressbar"
-                                        aria-valuenow="25"
-                                        aria-valuemin="0"
-                                        aria-valuemax="100"
-                                    ></div>
+                                </div>
+                                <div className="row align-items-center justify-content-center h-70">
+                                    <h4 className="text-center">
+                                        {mapMissionType(mission.type)} 작성
+                                    </h4>
+                                </div>
+                                <div className="row h-20">
+                                    <div className="progress">
+                                        <div
+                                            className="progress-bar w-25"
+                                            role="progressbar"
+                                            aria-valuenow="25"
+                                            aria-valuemin="0"
+                                            aria-valuemax="100"
+                                        ></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
         </div>
     );

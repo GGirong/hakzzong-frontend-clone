@@ -1,59 +1,67 @@
-import React, { useEffect, useContext, useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import React, { useContext } from 'react';
 
+import { Form } from 'react-bootstrap';
+import { useForm } from 'react-hook-form';
+
+import { useAPI, APIRoute, ErrorCode } from 'Client';
 import { AppContext } from 'Contexts/AppContext';
-import { useModal } from 'Hooks';
-import { RegisterModal } from 'Components/modals';
+import { FindPasswordModal, RegisterModal, useModal } from 'Components/modals';
 
-export const MainView = props => {
-    const {
-        state: { user },
-        dispatchers: appContextDispatchers,
-        apiCallers,
-    } = useContext(AppContext);
+export const MainView = () => {
+    const { dispatchers } = useContext(AppContext);
 
     const registerModal = useModal();
+    const findPasswordModal = useModal();
 
-    const history = useHistory();
+    const { register, handleSubmit, errors: formErrors } = useForm();
 
-    const [username, setUserName] = useState('');
-    const [password, setPassword] = useState('');
+    const loginAPI = useAPI(APIRoute.Common.Auth.Login, {
+        callbacks: {
+            onSuccess: result => {
+                const { researchAssistantProfile, ...user } = result;
+                dispatchers.user.set(user);
+                dispatchers.researchAssistant.setProfile(
+                    researchAssistantProfile,
+                );
+            },
+            // example of api error handling
+            onError: error => {
+                switch (error.code) {
+                    case ErrorCode.NO_USER:
+                        alert('존재하지 않는 회원입니다.');
+                        break;
+                    default:
+                        alert(error.message);
+                }
+            },
+        },
+    });
 
-    const handleChange = (e, setter) => setter(e.target.value);
-
-    const handleLoginButtonClick = e => {
-        apiCallers.login({
-            username,
-            password,
+    const onSubmit = data => {
+        loginAPI.send({
+            username: data.username,
+            password: data.password,
         });
     };
-
-    const openRegisterModal = () => {
-        appContextDispatchers.openModal;
-    };
-
-    useEffect(() => {
-        if (user.username) {
-            history.push('/missions');
-        }
-    }, [user]);
 
     return (
         <>
             <section>
                 <div className="row mr-0 ml-0 h-40">
                     <div className="p-2 col-lg-4 h-100">
-                        <div className="login-form border p-3 h-100">
+                        <Form
+                            onSubmit={handleSubmit(onSubmit)}
+                            className="login-form border p-3 h-100"
+                        >
                             <div className="row">
                                 <div className="col-12 pt-2 pb-2">
                                     <label>아이디</label>
                                 </div>
                                 <div className="col-12">
                                     <input
-                                        onChange={e =>
-                                            handleChange(e, setUserName)
-                                        }
+                                        name="username"
                                         className="input w-100 pt-3 pb-3 rounded-0"
+                                        ref={register}
                                     />
                                 </div>
                             </div>
@@ -63,11 +71,10 @@ export const MainView = props => {
                                 </div>
                                 <div className="col-12">
                                     <input
-                                        onChange={e =>
-                                            handleChange(e, setPassword)
-                                        }
+                                        name="password"
                                         type="password"
                                         className="input w-100 pt-3 pb-3 rounded-0"
+                                        ref={register}
                                     />
                                 </div>
                             </div>
@@ -78,7 +85,7 @@ export const MainView = props => {
                                             id="register-btn"
                                             className="pt-2"
                                             href="#"
-                                            onClick={e => registerModal.open()}
+                                            onClick={registerModal.open}
                                         >
                                             <label>회원가입</label>
                                         </a>
@@ -95,14 +102,14 @@ export const MainView = props => {
                             <div className="row">
                                 <div className="col-12 pt-2 pb-2">
                                     <button
-                                        onClick={handleLoginButtonClick}
+                                        type="submit"
                                         className="btn btn-primary w-100 pt-3 pb-3 rounded-0"
                                     >
                                         로그인
                                     </button>
                                 </div>
                             </div>
-                        </div>
+                        </Form>
                     </div>
                     <div className="p-2 col-lg-8 h-100">
                         <div className="d-flex justify-content-center align-items-center border h-100">
@@ -119,6 +126,7 @@ export const MainView = props => {
                 </div>
             </section>
             <RegisterModal {...registerModal} />
+            <FindPasswordModal {...findPasswordModal} />
         </>
     );
 };

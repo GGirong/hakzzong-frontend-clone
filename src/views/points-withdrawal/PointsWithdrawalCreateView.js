@@ -1,16 +1,49 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect } from 'react';
+
+import { useForm } from 'react-hook-form';
+import { Form } from 'react-bootstrap';
+
+import { AppContext } from 'Contexts';
+import { useAPI, APIRoute } from 'Client';
+import { formatMoney, stripMoney } from 'Utils';
 
 export const PointsWithdrawalCreateView = props => {
-    const [bank, setBank] = useState('');
-    const [bankHolder, setBankHolder] = useState('');
-    const [bankAccountNumber, setBankAccountNumber] = useState('');
-    const [points, setPoints] = useState(0);
+    const {
+        researchAssistant: { profile: researchAssistantProfile },
+        dispatchers,
+    } = useContext(AppContext);
 
-    const handleChange = (e, setter) => setter(e.target.value);
+    const researchAssitantProfilePatchForm = useForm();
+    const pointsWithdrawalCreateForm = useForm();
 
-    const handleSubmitButtonClick = e => {
-        return;
-    };
+    const researchAssitantProfilePatchAPI = useAPI(
+        APIRoute.ResearchAssistant.Profile.Patch,
+        {
+            callbacks: {
+                onSuccess: result => {
+                    dispatchers.researchAssistant.setProfile(result);
+                },
+            },
+        },
+    );
+    const pointsWithdrawalCreateAPI = useAPI(
+        APIRoute.ResearchAssistant.PointsWithdrawal.Create,
+    );
+
+    useEffect(() => {
+        const {
+            bank,
+            bankHolder,
+            bankAccountNumber,
+        } = researchAssistantProfile;
+
+        const { setValue } = researchAssitantProfilePatchForm;
+        if ((bank && bankHolder, bankAccountNumber)) {
+            setValue('bank', bank);
+            setValue('bankHolder', bankHolder);
+            setValue('bankAccountNumber', bankAccountNumber);
+        }
+    }, [researchAssistantProfile]);
 
     return (
         <div className="row">
@@ -54,83 +87,133 @@ export const PointsWithdrawalCreateView = props => {
                             <b>정산 받을 계좌</b>
                         </h3>
                     </div>
-                    <div className="row w-100 mt-3">
-                        <div className="col-2 p-0">
-                            <label className="d-block">은행명</label>
-                            <input
-                                type="text"
-                                onChange={e => handleChange(e, setBank)}
-                                className="input rounded-0 border pt-3 pb-3 w-95"
-                            />
-                        </div>
-                        <div className="col-5 p-0">
-                            <label className="d-block">계좌번호</label>
-                            <input
-                                type="text"
-                                onChange={e =>
-                                    handleChange(e, setBankAccountNumber)
-                                }
-                                className="input w-95 rounded-0 border pt-3 pb-3"
-                            />
-                        </div>
-                        <div className="col-5 p-0">
-                            <label className="d-block">예금주</label>
-                            <div className="row">
+                    <Form
+                        onSubmit={researchAssitantProfilePatchForm.handleSubmit(
+                            data =>
+                                researchAssitantProfilePatchAPI.send(data, {
+                                    additionalPath: researchAssistantProfile.id,
+                                }),
+                        )}
+                    >
+                        <div className="row w-100 mt-3">
+                            <div className="col-2 p-0">
+                                <label className="d-block">은행명</label>
                                 <input
+                                    name="bank"
                                     type="text"
-                                    onChange={e =>
-                                        handleChange(e, setBankHolder)
-                                    }
-                                    className="col-6 input rounded-0 border pt-3 pb-3"
+                                    className="input rounded-0 border pt-3 pb-3 w-95"
+                                    ref={researchAssitantProfilePatchForm.register(
+                                        { required: true },
+                                    )}
                                 />
-                                <button className="col-5 btn btn-primary btn-lg ml-2">
-                                    변경하기
-                                </button>
+                            </div>
+                            <div className="col-5 p-0">
+                                <label className="d-block">계좌번호</label>
+                                <input
+                                    name="bankAccountNumber"
+                                    type="text"
+                                    className="input w-95 rounded-0 border pt-3 pb-3"
+                                    ref={researchAssitantProfilePatchForm.register(
+                                        { required: true },
+                                    )}
+                                />
+                            </div>
+                            <div className="col-5 p-0">
+                                <label className="d-block">예금주</label>
+                                <div className="row">
+                                    <input
+                                        name="bankHolder"
+                                        type="text"
+                                        className="col-6 input rounded-0 border pt-3 pb-3"
+                                        ref={researchAssitantProfilePatchForm.register(
+                                            { required: true },
+                                        )}
+                                    />
+                                    <button
+                                        type="submit"
+                                        className="col-5 btn btn-primary btn-lg ml-2"
+                                    >
+                                        변경하기
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </Form>
+                </div>
+                <Form
+                    onSubmit={pointsWithdrawalCreateForm.handleSubmit(data =>
+                        pointsWithdrawalCreateAPI.send({
+                            ...data,
+                            amount: stripMoney(data.amount),
+                        }),
+                    )}
+                >
+                    <div className="row mt-5 mb-5">
+                        <div className="row w-100 mt-3">
+                            <h3>
+                                <b>정산 받을 포인트</b>
+                            </h3>
+                        </div>
+                        <div className="row w-100 mt-3">
+                            <div className="col-4 p-0 d-flex align-items-center">
+                                <input
+                                    name="amount"
+                                    type="text"
+                                    className="input rounded-0 border pt-3 pb-3 w-100"
+                                    onChange={() =>
+                                        pointsWithdrawalCreateForm.setValue(
+                                            'amount',
+                                            formatMoney(
+                                                stripMoney(e.target.value),
+                                            ),
+                                        )
+                                    }
+                                    ref={pointsWithdrawalCreateForm.register}
+                                />
+                            </div>
+                            <div className="col-1 p-0 d-flex align-items-center justify-content-center">
+                                <label className="ml-3">포인트</label>
+                            </div>
+                            <div className="col-2 p-0 d-flex align-items-center">
+                                <a
+                                    href="#"
+                                    className="btn btn-primary btn-lg ml-2"
+                                    onClick={() =>
+                                        pointsWithdrawalCreateForm.setValue(
+                                            'amount',
+                                            formatMoney(
+                                                researchAssistantProfile.points,
+                                            ),
+                                        )
+                                    }
+                                >
+                                    전액정산
+                                </a>
+                            </div>
+                            <div className="col-2 p-0 d-flex align-items-center justify-content-end">
+                                <span className="text-muted">현재 잔액:</span>
+                            </div>
+                            <div className="col-2 p-0 d-flex align-items-center justify-content-end">
+                                <span className="text-muted">
+                                    {formatMoney(
+                                        researchAssistantProfile.points,
+                                    )}
+                                    포인트
+                                </span>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div className="row mt-5 mb-5">
-                    <div className="row w-100 mt-3">
-                        <h3>
-                            <b>정산 받을 포인트</b>
-                        </h3>
-                    </div>
-                    <div className="row w-100 mt-3">
-                        <div className="col-4 p-0 d-flex align-items-center">
-                            <input
-                                type="text"
-                                onChange={e => handleChange(e, setPoints)}
-                                className="input rounded-0 border pt-3 pb-3 w-100"
-                            />
-                        </div>
-                        <div className="col-1 p-0 d-flex align-items-center justify-content-center">
-                            <label className="ml-3">포인트</label>
-                        </div>
-                        <div className="col-2 p-0 d-flex align-items-center">
-                            <button className="btn btn-primary btn-lg ml-2">
-                                전액정산
+                    <div className="row mt-5 pt-5">
+                        <div className="offset-4 col-3 justify-content-center align-items-center d-flex">
+                            <button
+                                type="submit"
+                                className="btn btn-primary btn-lg rounded-0 btn-block"
+                            >
+                                정산 요청
                             </button>
                         </div>
-                        <div className="col-2 p-0 d-flex align-items-center justify-content-end">
-                            <span className="text-muted">현재 잔액:</span>
-                        </div>
-                        <div className="col-2 p-0 d-flex align-items-center justify-content-end">
-                            <span className="text-muted">5,600 포인트</span>
-                        </div>
                     </div>
-                </div>
-                <div className="row mt-5 pt-5">
-                    <div className="offset-4 col-3 justify-content-center align-items-center d-flex">
-                        <button
-                            type="button"
-                            onClick={handleSubmitButtonClick}
-                            className="btn btn-primary btn-lg rounded-0 btn-block"
-                        >
-                            정산 요청
-                        </button>
-                    </div>
-                </div>
+                </Form>
             </div>
         </div>
     );

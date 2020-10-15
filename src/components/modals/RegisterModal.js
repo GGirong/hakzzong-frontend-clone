@@ -1,44 +1,46 @@
-import React, { useContext, useEffect } from 'react';
+import React from 'react';
 
 import { Container, Row, Col, Modal, Form, Button } from 'react-bootstrap';
 import { useForm } from 'react-hook-form';
 
-import {
-    AppContext,
-    ApiErrorCode,
-    useErrorListener,
-} from 'Contexts/AppContext';
+import { useAPI, APIRoute } from 'Client';
 
 export const RegisterModal = ({ isOpen = false, close }) => {
-    const appContext = useContext(AppContext);
-    const apiErrors = useErrorListener('AUTH_USERNAME_NOT_VALID');
+    const validateUsernameAPI = useAPI(APIRoute.Common.Auth.ValidateUsername);
+    const registerAPI = useAPI(APIRoute.ResearchAssistant.Auth.Register, {
+        callbacks: {
+            onSuccess: data => {
+                alert(`${data.user.username} 님의 가입을 축하드립니다!`);
+                close();
+            },
+            onError: error => console.error(error),
+        },
+    });
 
     const { register, watch, handleSubmit, errors: formErrors } = useForm();
     const watchFields = watch(['username', 'password', 'passwordConfirmation']);
 
-    const onSubmit = async data => {
-        await appContext.apiCallers.register(data);
+    const onSubmit = data => {
+        registerAPI.send({
+            user: {
+                name: data.name,
+                username: data.username,
+                password: data.password,
+                email: data.email,
+            },
+        });
     };
 
     const handleUsernameValidationButtonClick = async e => {
         e.preventDefault();
-        await appContext.apiCallers.validateUsername({
-            username: watchFields.username,
-        });
+        await validateUsernameAPI.send({ username: watchFields.username });
     };
-
-    const hasApiError = errorCode =>
-        !!apiErrors.find(error => error.code === errorCode);
-
-    useEffect(() => {
-        console.log(hasApiError(ApiErrorCode.AUTH_USERNAME_NOT_VALID));
-    }, [apiErrors]);
 
     return (
         <Modal id="register-modal" show={isOpen} onHide={close}>
             <Modal.Header className="d-block">
                 <Row className="w-100">
-                    <Button className="close" onClick={e => close()}>
+                    <Button className="close" onClick={close}>
                         <span aria-hidden="true">&times;</span>
                     </Button>
                 </Row>
@@ -61,9 +63,7 @@ export const RegisterModal = ({ isOpen = false, close }) => {
                                             className="input w-100 pt-3 pb-3 rounded-0"
                                             ref={register}
                                         />
-                                        {hasApiError(
-                                            ApiErrorCode.AUTH_USERNAME_NOT_VALID,
-                                        ) && (
+                                        {validateUsernameAPI.error && (
                                             <small className="form-text text-danger">
                                                 이 아이디는 사용하실 수
                                                 없습니다.
@@ -109,7 +109,7 @@ export const RegisterModal = ({ isOpen = false, close }) => {
                                         {watchFields.passwordConfirmation &&
                                             watchFields.password !==
                                                 watchFields.passwordConfirmation && (
-                                                <small class="form-text text-danger">
+                                                <small className="form-text text-danger">
                                                     비밀번호가 일치하지
                                                     않습니다.
                                                 </small>

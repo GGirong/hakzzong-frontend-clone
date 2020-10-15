@@ -6,10 +6,9 @@ export * from './mission/MissionTutorialView';
 
 export * from './points-withdrawal/PointsWithdrawalCreateView';
 
-export * from './study-subject/StudySubjectCreateSuccessView';
-export * from './study-subject/StudySubjectCreateView';
-export * from './study-subject/StudySubjectDetailView';
-export * from './study-subject/StudySubjectUnitTagView';
+export * from './study-subject/StudySubjectCreatePatchView';
 
 export * from './concept/ConceptCreateView';
 export * from './concept/ConceptDetailView';
+
+export * from './admin';

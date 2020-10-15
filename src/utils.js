@@ -1,7 +1,7 @@
 import _ from 'lodash';
-import uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
-export const generateUuid = uuid.v4;
+export const generateUuid = uuidv4;
 
 export const formatMoney = v => {
     v = new Intl.NumberFormat('ko-KR', {
@@ -91,3 +91,26 @@ export const setStorage = (key, value, expires = 24 * 60 * 60) => {
     }
     return true;
 };
+
+export const compose = (...fns) => {
+    return x => {
+        return fns.reduceRight((y, f) => f(y), x);
+    };
+};
+
+export const getFieldArrayValues = (fields, key = 'value') => {
+    return fields.map(field => field[key]);
+};
+
+export const pad2DArray = (array, pad) => {
+    const maxLength = Math.max(...array.map(innerArray => innerArray.length));
+    return [
+        ...array.map(innerArray =>
+            [...innerArray].concat(
+                Array.from({ length: maxLength - innerArray.length }).fill(pad),
+            ),
+        ),
+    ];
+};
+
+export const transpose = m => m && m[0] && m[0].map((x, i) => m.map(x => x[i]));

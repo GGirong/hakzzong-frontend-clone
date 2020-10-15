@@ -143,21 +143,21 @@ hr.thick {
 
 /* modals */
 
-.modal.modal-narrow .modal-dialog {
+.modal .modal-dialog.modal-narrow {
     max-width: 400px;
 }
 
-.modal.modal-select-relatives table th,
-.modal.modal-select-relatives table td {
+.modal .modal-select-relatives table th,
+.modal .modal-select-relatives table td {
     text-align: center;
     border: none;
 }
 
-.modal.modal-select-relatives .modal-header {
+.modal .modal-select-relatives .modal-header {
     border-bottom: none;
 }
 
-.modal.modal-select-relatives .close {
+.modal .modal-select-relatives .close {
     font-size: 1.5rem;
 }
 

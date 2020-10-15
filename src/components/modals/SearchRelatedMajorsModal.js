@@ -1,72 +1,84 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 
-import { Modal, Button } from 'react-bootstrap';
+import { Modal } from 'react-bootstrap';
+import { transpose } from 'Utils';
+import { AppContext } from 'Contexts';
 
 export const SearchRelatedMajorsModal = ({
-    show = false,
-    open = () => {},
-    close = () => {},
+    addMajorCategory,
+    isOpen = false,
+    close,
 }) => {
+    const handleCategoryClick = category => {
+        addMajorCategory(category);
+        close();
+    };
+
+    const reshapeMajorCategories = () => {
+        const reshaped = [];
+        Object.entries(majorCategories).map(([key, array]) => {
+            reshaped.push([key, ...array]);
+        });
+        return transpose(reshaped) || [];
+    };
+
     return (
         <Modal
             id="select-related-majors-modal"
             className="modal-select-relatives"
-            show={show}
+            onHide={close}
+            show={isOpen}
         >
-            <Modal.Dialog>
-                <div className="modal-content">
-                    <Modal.Header>
-                        <button
-                            type="button"
-                            className="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                        >
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </Modal.Header>
-                    <Modal.Body>
-                        <div className="container">
-                            <table className="table">
-                                <thead>
-                                    <tr>
-                                        <th>인문/사회</th>
-                                        <th>어문</th>
-                                        <th>과학</th>
-                                        <th>의학</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td className="text-muted">인문</td>
-                                        <td>문어</td>
-                                        <td className="text-muted">물리</td>
-                                        <td className="text-muted">몰라</td>
-                                    </tr>
-                                    <tr>
-                                        <td>인문</td>
-                                        <td className="text-muted">문어</td>
-                                        <td className="text-muted">물리</td>
-                                        <td className="text-muted">몰라</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="text-muted">인문</td>
-                                        <td className="text-muted">문어</td>
-                                        <td className="text-muted">물리</td>
-                                        <td>몰라</td>
-                                    </tr>
-                                    <tr>
-                                        <td className="text-muted">인문</td>
-                                        <td className="text-muted">문어</td>
-                                        <td className="text-muted">물리</td>
-                                        <td className="text-muted">몰라</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </Modal.Body>
+            <Modal.Header>
+                <button
+                    type="button"
+                    className="close"
+                    data-dismiss="modal"
+                    aria-label="Close"
+                    onClick={close}
+                >
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </Modal.Header>
+            <Modal.Body>
+                <div className="container">
+                    <table className="table">
+                        <thead>
+                            <tr>
+                                {Object.keys(majorCategories).map(
+                                    (majorCateogry, index) => (
+                                        <td key={index} className="text-muted">
+                                            {majorCateogry}
+                                        </td>
+                                    ),
+                                )}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {reshapeMajorCategories().map((row, rowIndex) => (
+                                <tr key={rowIndex}>
+                                    {row.map(
+                                        (col, colIndex) =>
+                                            col && (
+                                                <td
+                                                    key={`${rowIndex}-${colIndex}`}
+                                                    onClick={() =>
+                                                        handleCategoryClick(
+                                                            col.id,
+                                                        )
+                                                    }
+                                                    className="text-muted"
+                                                >
+                                                    {col.subcategoryName}
+                                                </td>
+                                            ),
+                                    )}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
                 </div>
-            </Modal.Dialog>
+            </Modal.Body>
         </Modal>
     );
 };

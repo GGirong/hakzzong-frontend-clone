@@ -9,7 +9,8 @@
             "Layouts/*": ["./src/layouts/*"],
             "Views/*": ["./src/views/*"],
             "Public/*": ["./public/*"],
-            "Utils": ["./src/utils.js"]
+            "Utils": ["./src/utils.js"],
+            "Client": ["src/client/*"]
         }
     }
 }
