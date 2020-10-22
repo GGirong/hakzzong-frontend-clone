@@ -9,6 +9,10 @@ export const SearchRelatedMajorsModal = ({
     isOpen = false,
     close,
 }) => {
+    const {
+        researchAssistant: { majorCategories },
+    } = useContext(AppContext);
+
     const handleCategoryClick = category => {
         addMajorCategory(category);
         close();
