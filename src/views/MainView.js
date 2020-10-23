@@ -47,66 +47,74 @@ export const MainView = () => {
     return (
         <>
             <section>
-                <div className="row mr-0 ml-0 h-40">
+                <div className="row mr-0 ml-0">
                     <div className="p-2 col-lg-4 h-100">
                         <Form
                             onSubmit={handleSubmit(onSubmit)}
                             className="login-form border p-3 h-100"
                         >
                             <div className="row">
-                                <div className="col-12 pt-2 pb-2">
+                                <div className="col-12 pt-2 pb-2 login-label">
                                     <label>아이디</label>
                                 </div>
                                 <div className="col-12">
                                     <input
                                         name="username"
-                                        className="input w-100 pt-3 pb-3 rounded-0"
+                                        className="input w-100 pt-3 pb-3 rounded-0 login-input"
                                         ref={register}
                                     />
                                 </div>
                             </div>
                             <div className="row">
-                                <div className="col-12 pt-2 pb-2">
+                                <div className="col-12 pt-2 pb-2 login-label">
                                     <label>비밀번호</label>
                                 </div>
                                 <div className="col-12">
                                     <input
                                         name="password"
                                         type="password"
-                                        className="input w-100 pt-3 pb-3 rounded-0"
+                                        className="input w-100 pt-3 pb-3 rounded-0 login-input"
                                         ref={register}
                                     />
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-12 pt-2 pb-2">
-                                    <div className="d-flex  flex-column w-100 align-items-end justify-content-end">
-                                        <a
-                                            id="register-btn"
-                                            className="pt-2"
-                                            href="#"
-                                            onClick={registerModal.open}
-                                        >
-                                            <label>회원가입</label>
-                                        </a>
-                                        <a
-                                            id="find-password-btn"
-                                            className="pt-2"
-                                            href="#"
-                                        >
-                                            <label>비밀번호 찾기</label>
-                                        </a>
-                                    </div>
+                                    <button
+                                        type="submit"
+                                        className="btn-main-color w-100 pt-3 pb-3"
+                                    >
+                                        로그인
+                                    </button>
                                 </div>
                             </div>
                             <div className="row">
                                 <div className="col-12 pt-2 pb-2">
-                                    <button
-                                        type="submit"
-                                        className="btn btn-primary w-100 pt-3 pb-3 rounded-0"
-                                    >
-                                        로그인
-                                    </button>
+                                    <div className="d-flex  flex-column w-100 align-items-end justify-content-end">
+                                        <a
+                                            id="find-password-btn"
+                                            className="pt-1 finding-label"
+                                            href="#"
+                                            onClick={findPasswordModal.open}
+                                        >
+                                            <label className="cursor-pointer">비밀번호 찾기</label>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="line border-bottom"></div>
+                            <div className="row">
+                                <div className="col-12 pt-4">
+                                    <div className="d-flex w-100 align-items-center justify-content-center pt-3">
+                                        <a
+                                            id="register-btn"
+                                            className="reister-label pt-1"
+                                            href="#"
+                                            onClick={registerModal.open}
+                                        >
+                                            <label className="cursor-pointer">무료 회원가입</label>
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </Form>

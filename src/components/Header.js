@@ -34,7 +34,7 @@ export const Header = (props = { user: {} }) => {
                                         <b>탐구주제 학과/과목 조합 보기</b>
                                     </button>
                                 </div>
-                                <div className="col-3 d-flex align-items-center justify-content-center">
+                                <div className="col-3 d-flex align-items-center justify-content-center point-mobile">
                                     <span>1,000 포인트</span>
                                 </div>
                                 <div className="col-2 bg-info d-flex align-items-center justify-content-center">

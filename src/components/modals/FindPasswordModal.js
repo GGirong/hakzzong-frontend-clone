@@ -6,7 +6,7 @@ import { useForm } from 'react-hook-form';
 import { useAPI, APIRoute } from 'Client';
 
 export const FindPasswordModal = ({
-    show = false,
+    isOpen = false,
     open = () => {},
     close = () => {},
 }) => {
@@ -29,7 +29,7 @@ export const FindPasswordModal = ({
     };
 
     return (
-        <Modal id="find-password-modal" className="modal-narrow" show={show}>
+        <Modal id="find-password-modal" className="modal-narrow" show={isOpen}>
             <Modal.Header className="d-block">
                 <div className="row w-100">
                     <Button className="close" onClick={close}>
@@ -52,7 +52,7 @@ export const FindPasswordModal = ({
                                     <div className="col-12">
                                         <input
                                             name="username"
-                                            className="input w-100 pt-3 pb-3 rounded-0"
+                                            className="password-modal-input input w-100 pt-3 pb-3 rounded-0"
                                             ref={findPassword}
                                         />
                                     </div>
@@ -64,14 +64,14 @@ export const FindPasswordModal = ({
                                     <div className="col-12">
                                         <input
                                             name="email"
-                                            className="input w-100 pt-3 pb-3 rounded-0"
+                                            className="password-modal-input input w-100 pt-3 pb-3 rounded-0"
                                             ref={findPassword}
                                         />
                                     </div>
                                 </div>
                                 <div className="row mt-5">
                                     <div className="col-12 pt-2 pb-2">
-                                        <button className="btn btn-primary w-100 pt-3 pb-3 rounded-0">
+                                        <button className="btn-main-color w-100 pt-3 pb-3">
                                             임시 비밀번호 발급
                                         </button>
                                     </div>

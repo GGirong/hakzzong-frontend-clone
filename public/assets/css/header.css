@@ -1,0 +1,26 @@
+/* 헤더 */
+
+.header-combination-btn {
+    border: 1px solid #30A9DE;
+    border-radius: 5px;
+    color: #30A9DE;
+    padding: 10px;
+    cursor: pointer;
+}
+
+.header-cal-btn {
+    border-radius: 5px;
+    background-color: #30A9DE;
+    color: #fff;
+    cursor: pointer;
+}
+
+.profile-container {
+    border-radius: 10px;
+}
+
+@media (max-width: 1200px) {
+    .point-mobile {
+        display: none;
+    }
+}

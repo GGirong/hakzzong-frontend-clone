@@ -1,0 +1,70 @@
+/* ongoing, list */
+
+.mission {
+    max-width: 320px;
+    height: auto;
+}
+
+.ongoing-text-bottom {
+    margin-top: 75px;
+}
+
+.progress-bar {
+    background-color: #30A9DE;
+}
+
+/* request-settlement */
+
+.background-main-color {
+    border-radius: 5px;
+    background-color: #30A9DE;
+    color: #fff;
+    cursor: pointer;
+}
+
+/* concept */
+
+h6 {
+    font-size: 18px;
+}
+
+.light-font {
+    font-size: 14px;
+    font-weight: 400;
+    color: #566270;
+}
+
+.cocept-input {
+    border: 0px;
+    border-bottom: 1px solid #E0E3DA;
+}
+.cocept-input-sm {
+    border: 1px solid #E0E3DA;
+}
+.border-light-color {
+    border: 1px solid #E0E3DA;
+}
+.border-dark-color {
+    border: 1px solid #4e4e4e;
+}
+
+.search-result-box {
+    border: 1px solid #E0E3DA;
+}
+
+.search-result-box .item{
+    font-size: 16px;
+    border-bottom: 1px solid #E0E3DA;
+}
+
+.search-result-box .item:last-child {
+    border-bottom: 0px
+}
+
+.search-concept-result {
+    border: 1px solid #E0E3DA;
+}
+
+.select-related-majors-table th {
+    width: 130px;
+}

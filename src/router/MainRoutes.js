@@ -30,33 +30,33 @@ const MainRoutesWithRouter = withRouter(router => {
             <AuthenticatedOnlyRoute
                 component={Views.MissionTutorialView}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 path="/missions/tutorial/"
             />
             <AuthenticatedOnlyRoute
                 component={Views.MissionDetailView}
                 routeComponent={EntityPrefetchRoute}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 path="/missions/:id/"
             />
             <AuthenticatedOnlyRoute
                 component={Views.MissionListView}
                 routeComponent={EntityPrefetchRoute}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 path="/missions/"
             />
             <AuthenticatedOnlyRoute
                 component={Views.PointsWithdrawalCreateView}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 path="/points-withdrawals/create/"
             />
             <AuthenticatedOnlyRoute
                 component={Views.StudySubjectCreateSuccessView}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 beforeRouteGuard={!!researchAssistant.currentMissionId}
                 path="/study-subjects/complete/"
             />
@@ -71,13 +71,13 @@ const MainRoutesWithRouter = withRouter(router => {
                 routeComponent={EntityPrefetchRoute}
                 component={Views.StudySubjectCreatePatchView}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 path="/study-subjects/:id/patch/"
             />
             <AuthenticatedOnlyRoute
                 component={Views.ConceptCreateView}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 beforeRouteGuard={!!researchAssistant.currentMissionId}
                 path="/concepts/create/"
             />
@@ -85,7 +85,7 @@ const MainRoutesWithRouter = withRouter(router => {
                 component={Views.ConceptDetailView}
                 routeComponent={EntityPrefetchRoute}
                 exact
-                isAuthenticated={isAuthenticated}
+                isAuthenticated={true}
                 path="/concepts/:id/"
             />
 
